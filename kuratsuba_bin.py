@@ -1,4 +1,4 @@
-import random
+import random, math
 
 
 def skip_leading_zeros(x: str):
@@ -10,7 +10,11 @@ def skip_leading_zeros(x: str):
     return i - 1
 
 
-def add(x, y, bits=64):
+def is_zero(x):
+    return all(c == '0' for c in x)
+
+
+def add(x, y, bits):
     res = ""
     carry = 0
     x = x.zfill(bits)
@@ -23,20 +27,20 @@ def add(x, y, bits=64):
     return res[skip_leading_zeros(res):]
 
 
-def make_negative(x, bits=64):
+def make_negative(x, bits):
     res = ""
     x = x.zfill(bits)
     for i in range(bits):
         res += '1' if x[i] == '0' else '0'
-    res = add(res, "1".zfill(bits))
+    res = add(res, "1".zfill(bits), bits)
     return res
 
 
-def sub(x, y):
-    return add(x, make_negative(y))
+def sub(x, y, bits):
+    return add(x, make_negative(y, bits), bits)
 
 
-def mul(x, y, bits=64):
+def mul(x, y, bits):
     ret = '0' * bits
     x = x.zfill(bits)
     y = y.zfill(bits)
@@ -48,14 +52,14 @@ def mul(x, y, bits=64):
             s += str((int(y[m - i]) * int(x[n - j]) + carry) % 2)
             carry = (int(y[m - i]) * int(x[n - j]) + carry) // 2
         s = s[::-1]
-        ret = add(ret, s[i - 1:] + '0' * (i - 1))
+        ret = add(ret, s[i - 1:] + '0' * (i - 1), bits)
     return ret
 
 
-def karatsuba_mul(x, y, bits=64):
-    vals = ["0", "1", make_negative("1")]
+def karatsuba_mul(x, y, bits):
+    vals = ["0", "1", make_negative("1", bits)]
     if x in vals and y in vals:
-        return mul(x, y)
+        return mul(x, y, bits)
     k = max(len(x), len(y))
     pivot = k // 2
 
@@ -66,31 +70,22 @@ def karatsuba_mul(x, y, bits=64):
     c = y[:pivot]
     b = x[-(k - pivot):]
     d = y[-(k - pivot):]
-    s1 = karatsuba_mul(a, c)
-    s2 = karatsuba_mul(b, d)
-    s3 = karatsuba_mul(add(a, b), add(c, d))
-    s4 = sub(sub(s3, s1), s2)
-    return add(add(s1 + '0' * (2 * (k - pivot)), s4 + '0' * (k - pivot)), s2)
+    s1 = karatsuba_mul(a, c, bits) if (not is_zero(a) and not is_zero(c)) else "0"
+    s2 = karatsuba_mul(b, d, bits) if (not is_zero(b) and not is_zero(d)) else "0"
+    s3 = karatsuba_mul(add(a, b, bits), add(c, d, bits), bits)
+    s4 = sub(sub(s3, s1, bits), s2, bits)
+    return add(add(s1 + '0' * (2 * (k - pivot)), s4 + '0' * (k - pivot), bits), s2, bits)
 
 
 def tests():
-    assert (karatsuba_mul("0", "0") == "0")
-    assert (karatsuba_mul("00", "00") == "0")
-    assert (karatsuba_mul(make_negative("0"), "00") == "0")
-    assert (karatsuba_mul(make_negative("1"), make_negative("1")) == "1")
-    assert (karatsuba_mul("1", "0") == "0")
-    assert (karatsuba_mul(make_negative("1"), "0") == "0")
-    assert (karatsuba_mul(make_negative("1"), "1") == make_negative("1"))
-    assert (karatsuba_mul("1101", "101") == "1000001")
-    assert (make_negative(karatsuba_mul("1101", make_negative("110"))) == "1001110")
-
-    for _ in range(100):
-        x = random.randint(0, 100)
+    for i in range(100):
+        bits = 2 ** random.randint(1, 8)
+        x = random.randint(0, math.ceil((2 ** (bits - 1)) ** 0.5))
         xb = bin(x)[2:]
-        y = random.randint(0, 100)
-        yb = make_negative(bin(y)[2:])
-        print(x, y, xb, yb)
-        assert (karatsuba_mul(xb, yb) == make_negative(bin(x * y)[2:]))
+        y = random.randint(0, math.ceil((2 ** (bits - 1)) ** 0.5))
+        yb = make_negative(bin(y)[2:], bits)
+
+        assert karatsuba_mul(xb, yb, bits) == make_negative(bin(x * y)[2:], bits)
 
 
 tests()
