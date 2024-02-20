@@ -7,8 +7,8 @@ def div(x, y, prec=5):
     mantissa = exponent = 0
     r = 0
     frac = False
-    while i >= 0 or frac is True:
-        nxt = x // 10 ** i % 10 if frac is False else 0
+    while i >= 0 or frac:
+        nxt = x // 10 ** i % 10 if not frac else 0
         t = r * 10 + nxt
         if frac is False:
             mantissa *= 10
@@ -18,11 +18,11 @@ def div(x, y, prec=5):
             r = t
         else:
             r = t - y * (t // y)
-            if frac is False:
+            if not frac:
                 mantissa += (t // y)
             else:
                 exponent += (t // y)
-        if (r == 0 and frac is True) or (len(str(exponent)) > prec):
+        if (r == 0 and frac) or (len(str(exponent)) > prec):
             break
         i -= 1
         if i < 0:
