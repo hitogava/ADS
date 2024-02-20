@@ -1,9 +1,9 @@
-#include <assert.h>
-#include <iostream>
-#include <functional>
-#include <vector>
 #include <algorithm>
+#include <assert.h>
 #include <chrono>
+#include <functional>
+#include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -31,7 +31,6 @@ void merge(vector<string> &arr, int left, int mid, int right) {
     for (size_t k = 0; k < i + j; k++) {
         arr[left + k] = buffer[k];
     }
-
 }
 
 void mergeSort(vector<string> &arr, int l, int r) {
@@ -43,9 +42,11 @@ void mergeSort(vector<string> &arr, int l, int r) {
     mergeSort(arr, mid, r);
     merge(arr, l, mid, r);
 }
+
 int e(int n) {
     return n;
 }
+
 int max(vector<int> &n) {
     int m = -1;
     for (size_t i = 0; i < n.size(); i++) {
@@ -53,12 +54,14 @@ int max(vector<int> &n) {
     }
     return m;
 }
+
 void print_vector(vector<string> &n) {
     for (auto &e : n) {
         cout << e << endl;
     }
     cout << "\n";
 }
+
 vector<int> counting_sort(vector<int> &nums, function<int(int)> f) {
     vector<int> k(max(nums) + 1, 0);
     vector<int> sorted(nums.size(), 0);
@@ -77,6 +80,7 @@ vector<int> counting_sort(vector<int> &nums, function<int(int)> f) {
 
     return sorted;
 }
+
 vector<int> nCharOfString(vector<string> &input, int n) {
     vector<int> b{};
     for (size_t i = 0; i < input.size(); i++) {
@@ -84,6 +88,7 @@ vector<int> nCharOfString(vector<string> &input, int n) {
     }
     return b;
 }
+
 void shuffle(vector<string> &s, vector<int> indexes) {
     vector<string> buffer = s;
     for (size_t i = 0; i < s.size(); i++) {
@@ -91,6 +96,7 @@ void shuffle(vector<string> &s, vector<int> indexes) {
     }
     s = buffer;
 }
+
 void lsd_radix_sort(vector<string> &input) {
     vector<string> buffer = input;
     if (input.size() > 1) {
@@ -106,12 +112,13 @@ void lsd_radix_sort(vector<string> &input) {
 
 string gen_random(const int len) {
     string alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    string tmp {};
+    string tmp{};
     for (size_t i = 0; i < len; i++) {
         tmp += alpha[rand() % (alpha.length() - 1)];
     }
     return tmp;
 }
+
 bool isSorted(vector<string> vec) {
     for (size_t i = 0; i < vec.size() - 1; i++) {
         if (vec[i] > vec[i + 1])
@@ -119,47 +126,50 @@ bool isSorted(vector<string> vec) {
     }
     return true;
 }
-using namespace std::chrono; 	
+
+using namespace std::chrono;
+
 void run() {
     size_t wlen = 100 + rand() % 1000;
     size_t vlen = 100 + rand() % 1000;
     vector<string> randomVec(vlen);
-	
+
     for (size_t i = 0; i < vlen; i++) {
         randomVec.at(i) = gen_random(wlen);
     }
     vector<string> randomVec1 = randomVec;
-	time_point<high_resolution_clock> start_point, end_point;
-	
-	start_point = high_resolution_clock::now(); 
-	
+    time_point<high_resolution_clock> start_point, end_point;
+
+    start_point = high_resolution_clock::now();
+
     mergeSort(randomVec, 0, randomVec.size());
     assert(isSorted(randomVec));
-	 
-	end_point = high_resolution_clock::now(); 
-    
-    auto start = time_point_cast<microseconds>(start_point).time_since_epoch().count(); 
-	auto end = time_point_cast<microseconds>(end_point).time_since_epoch().count();
-	cout<<"Merge sort took "<<(end-start)<<" microseconds"<<endl;
 
-	start_point = high_resolution_clock::now(); 
-	
+    end_point = high_resolution_clock::now();
+
+    auto start = time_point_cast<microseconds>(start_point).time_since_epoch().count();
+    auto end = time_point_cast<microseconds>(end_point).time_since_epoch().count();
+    cout << "Merge sort took " << (end - start) << " microseconds" << endl;
+
+    start_point = high_resolution_clock::now();
+
     lsd_radix_sort(randomVec1);
     assert(isSorted(randomVec1));
-	 
-	end_point = high_resolution_clock::now(); 
-    start = time_point_cast<microseconds>(start_point).time_since_epoch().count(); 
-	end = time_point_cast<microseconds>(end_point).time_since_epoch().count();
-	cout<<"Radix sort took "<<(end-start)<<" microseconds "<<endl;
 
+    end_point = high_resolution_clock::now();
+    start = time_point_cast<microseconds>(start_point).time_since_epoch().count();
+    end = time_point_cast<microseconds>(end_point).time_since_epoch().count();
+    cout << "Radix sort took " << (end - start) << " microseconds " << endl;
 }
+
 void bench() {
     run();
     for (size_t i = 0; i < 5'000; i++)
         run();
 }
+
 int main() {
-    srand((unsigned)time(NULL)); 
+    srand((unsigned) time(NULL));
     bench();
     return 0;
 }
