@@ -78,7 +78,7 @@ def buildMatrixFromQuotes(q0: Matrix, q1: Matrix, q2: Matrix, q3: Matrix, quoteS
 
 def recursiveMultiply(m1, m2, n):
     # TODO: n <= ?
-    if n <= 256:
+    if n <= 16:
         return qubicMultiply(m1, m2, n)
     A = nQuater(m1, n, 0)
     B = nQuater(m1, n, 1)
@@ -100,7 +100,7 @@ def recursiveMultiply(m1, m2, n):
 
 
 def StrassenAlgorithm(m1, m2, n):
-    if n <= 256:
+    if n <= 16:
         return qubicMultiply(m1, m2, n)
 
     A = nQuater(m1, n, 0)
@@ -172,7 +172,7 @@ algos = ["Qubic", "8 recursive calls", "Strassen"]
 
 for _ in range(5):
     k = 3
-    n = random.randint(400, 550)
+    n = random.randint(200,250)
     dataSet = (Matrix(n), Matrix(n))
     print(f"Matrices {n} x {n}:")
     results = [
