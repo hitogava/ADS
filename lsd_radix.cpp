@@ -164,8 +164,6 @@ void run() {
 
 void bench() {
     run();
-    for (size_t i = 0; i < 5'000; i++)
-        run();
 }
 
 int main() {

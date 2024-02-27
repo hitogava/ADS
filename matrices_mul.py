@@ -15,8 +15,7 @@ class Matrix:
 
     def __init__(self, n):
         self.n = 2 ** math.ceil(math.log(n, 2))
-        self.values = []
-        self.initWithRandom()
+        self.values = [[0 for _ in range(self.n)] for _ in range(self.n)]
 
 
 def qubicMultiply(m1, m2, n):
@@ -77,7 +76,6 @@ def buildMatrixFromQuotes(q0: Matrix, q1: Matrix, q2: Matrix, q3: Matrix, quoteS
 
 
 def recursiveMultiply(m1, m2, n):
-    # TODO: n <= ?
     if n <= 16:
         return qubicMultiply(m1, m2, n)
     A = nQuater(m1, n, 0)
@@ -100,7 +98,7 @@ def recursiveMultiply(m1, m2, n):
 
 
 def StrassenAlgorithm(m1, m2, n):
-    if n <= 16:
+    if n <= 64:
         return qubicMultiply(m1, m2, n)
 
     A = nQuater(m1, n, 0)
@@ -112,7 +110,6 @@ def StrassenAlgorithm(m1, m2, n):
     F = nQuater(m2, n, 1)
     G = nQuater(m2, n, 2)
     H = nQuater(m2, n, 3)
-
     p = [
         0,
         StrassenAlgorithm(A, add(F, H, n // 2, True), n // 2),
@@ -172,8 +169,10 @@ algos = ["Qubic", "8 recursive calls", "Strassen"]
 
 for _ in range(5):
     k = 3
-    n = random.randint(200,250)
+    n = random.randint(512,512)
     dataSet = (Matrix(n), Matrix(n))
+    dataSet[0].initWithRandom();
+    dataSet[1].initWithRandom();
     print(f"Matrices {n} x {n}:")
     results = [
         benchmark(dataSet, qubicMultiply, k),
@@ -186,4 +185,3 @@ for _ in range(5):
         algos,
         list(zip(results[0], results[1], results[2])),
     )
-    print()

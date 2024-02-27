@@ -19,7 +19,7 @@ def shell_sort(arr, start, end, reverse=False):
     n = end - start + 1
     if n == 0:
         return
-    k_p = [2 ** k - 1 for k in range(math.floor(math.log(n, 2)), 0, -1)]
+    k_p = [2**k - 1 for k in range(math.floor(math.log(n, 2)), 0, -1)]
     for k in range(len(k_p)):
         insertion_sort(arr, start, end, k_p[k], reverse)
 
@@ -50,7 +50,7 @@ def merge_and_count_split_inversions(nums, left, mid, right):
             i += 1
         else:
             res[i + j] = nums[mid + j]
-            k += (mid - left - i)
+            k += mid - left - i
             j += 1
     while left + i < mid:
         res[i + j] = nums[left + i]
@@ -92,9 +92,25 @@ def isIdealPermutation(nums: list[int]) -> bool:
     return True
 
 
-array = [0, 2, 1]
-print(isIdealPermutation(array))
-array = [1, 0, 2]
-print(isIdealPermutation(array))
-array = [2, 0, 1]
-print(isIdealPermutation(array))
+def sortColors(nums):
+    l = 0
+    r = len(nums) - 1
+    m = 0
+    while m <= r:
+        if nums[m] == 0:
+            nums[l], nums[m] = nums[m], nums[l]
+            m += 1
+            l += 1
+        elif nums[m] == 2:
+            nums[m], nums[r] = nums[r], nums[m]
+            r -= 1
+        else:
+            m += 1
+    print(nums)
+
+
+sortColors([2, 0, 2, 1, 1, 0])
+sortColors([0, 2, 2, 2, 0, 2, 1, 1])
+sortColors([1, 0, 2])
+sortColors([1, 2, 0])
+sortColors([2, 1, 2])
