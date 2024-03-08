@@ -41,12 +41,7 @@ def naiveMin(stations):
 
 station_ys = [7, 9, 2, 1, 6, 4, 3]
 n = len(station_ys)
-print(kth(station_ys, 0, n - 1, n // 2))
-print(naiveMin(station_ys))
-
-station_ys = [12, 8, 5, 1]
-n = len(station_ys)
-print(kth(station_ys, 0, n - 1, n // 2))
+print(kth(station_ys, 0, n - 1, n // 2 + 1))
 print(naiveMin(station_ys))
 
 station_ys = [12, 8, 5, 1]
