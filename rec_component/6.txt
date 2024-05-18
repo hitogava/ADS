@@ -1,0 +1,8 @@
+7
+foo: baz, qux
+baz: boo, qux
+boo: foo, qux
+qux: qux
+bar: foo, foo1, foo2
+foo1: bar, foo2
+foo2: foo2

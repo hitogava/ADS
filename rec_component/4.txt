@@ -1,0 +1,6 @@
+5
+foo: baz, bar, foo, qux
+bar: bar, foo, baz
+baz: boo
+qux: baz, boo
+boo: baz, foo
