@@ -13,6 +13,9 @@ def reverse_graph(g):
 def adj(u, g):
     return [i for i in range(len(g)) if g[u][i]]
 
+def is_adj(u, v, g):
+    return g[u][v] == 1
+
 
 def has_cycle(src, curr, visited, g):
     visited[curr] = 1
@@ -26,38 +29,28 @@ def has_cycle(src, curr, visited, g):
     return False
 
 
-def is_recursive(g, func):
-    v = f_ht[func]
-    visited = [0 for _ in range(len(g))]
-    return has_cycle(v, v, visited, g)
-
-
-def print_recursive_functions():
-    for func in f_ht.keys():
-        if is_recursive(graph, func):
-            print(f"{func} is recursive")
-        else:
-            print(f"{func} is not recursive")
-
 def get_func_by_val(val):
     return list(f_ht.keys())[list(f_ht.values()).index(val)]
+
 
 def find_recursive_components(g):
     n = 0
     dq = collections.deque()
+    recursives = [0 for _ in range(len(g))]
 
     def DFS(v, visited, scc, g):
-        nonlocal n, dq
+        nonlocal n, dq, recursives
         visited[v] = 1
         if scc is not None:
             scc.append(v)
+            recursives[v] = 1
         for u in adj(v, g):
             if visited[u]:
                 continue
             DFS(u, visited, scc, g)
         dq.appendleft(v)
 
-    max_rec_comp = []
+    rec_components = []
     visited = [0 for _ in range(len(g))]
     reverse_graph(g)
     for i in range(len(g)):
@@ -70,10 +63,12 @@ def find_recursive_components(g):
     for v in list(dq):
         if not visited[v]:
             DFS(v, visited, scc, g)
-            max_rec_comp = max(scc, max_rec_comp, key=len)
+            if len(scc) == 1 and not is_adj(scc[0], scc[0], g):
+                recursives[scc[0]] = 0
+            rec_components.append(scc)
             scc = []
 
-    return max_rec_comp
+    return (rec_components, recursives)
 
 
 def create_adj_matrix(data, n):
@@ -95,5 +90,9 @@ with open(input_name, "r") as inp:
     data = [x[:-1] for x in inp.readlines()]
     n = int(data[0])
     graph = create_adj_matrix(data[1:], n)
-
-print([get_func_by_val(x) for x in find_recursive_components(graph)])
+    components, recursives = find_recursive_components(graph)
+    for i in range(len(recursives)):
+        if recursives[i]:
+            print(f"{get_func_by_val(i)} is recursive")
+        else:
+            print(f"{get_func_by_val(i)} is not recursive")
