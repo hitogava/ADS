@@ -10,7 +10,7 @@ class MyT:
         return f"{self.p}, {self.val}"
 
 
-class BinHeap:
+class BinaryHeap:
     def __init__(self) -> None:
         self.heap = []
         self.entry_finder = {}

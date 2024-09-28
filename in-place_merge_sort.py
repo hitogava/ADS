@@ -1,5 +1,4 @@
 import math
-import random
 
 
 def insertion_sort(arr, start, end, step, reverse=False):
@@ -20,9 +19,10 @@ def shell_sort(arr, start, end, reverse=False):
     n = end - start + 1
     if n == 0:
         return
-    k_p = [2 ** k - 1 for k in range(math.floor(math.log(n, 2)), 0, -1)]
+    k_p = [2**k - 1 for k in range(math.floor(math.log(n, 2)), 0, -1)]
     for k in range(len(k_p)):
         insertion_sort(arr, start, end, k_p[k], reverse)
+
 
 def buff_merge(nums, left, mid_start, mid_end, right, buff):
     i, j = 0, 0
@@ -64,7 +64,7 @@ def inplace_msort(nums, l, r):
     if r - l > 1:
         # m = (l + r) // 2
         m = l + (r - l) // 2
-        buff = l + r - m        # buff = m + (l + r) % 2
+        buff = l + r - m  # buff = m + (l + r) % 2
         buff_msort(nums, l, m, buff)
         while buff - l > 2:
             t = buff
@@ -74,13 +74,7 @@ def inplace_msort(nums, l, r):
             buff_merge(nums, l, l + t - buff, t, r, buff)
         insertion_sort(nums, l, r - 1, 1)
 
-    # print(f"Sorting {nums[]}")
 
-
-
-# nums = [13, 99, 51, 28, 91, 30, 34, 111, 56, 22, 37, 12, 1, 5, 15, 60]
 nums = [13, 99, 51, 28, 91, 30, 34, 111, 1, 5]
-# nums = [5, 1, 6, 3, 9]
-# nums = [5, 1, 6, 3]
 inplace_msort(nums, 0, len(nums))
 print(nums)

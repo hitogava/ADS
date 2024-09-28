@@ -1,4 +1,4 @@
-from bheap import BinHeap
+from bheap import BinaryHeap
 from fheap import HeapNode, FibHeap, GNode
 from typing import Any
 import sys, math
