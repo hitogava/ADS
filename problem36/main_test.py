@@ -3,7 +3,7 @@ from main import solution
 def check(test_number: int):
     with open(f"./tests/{test_number}.in", "r") as inp:
         with open(f"./tests/{test_number}.exp", "r") as out:
-            data = inp.read()
+            data = inp.read().strip('\n')
             out = out.read().strip('\n')
 
             assert out == solution(data)

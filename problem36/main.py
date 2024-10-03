@@ -25,20 +25,22 @@ def solution(data) -> str:
     xs = [-1 for _ in range(n + 1)]
 
     for ch, d, _ in arr:
-        if tasks[d] == -1:
+        if tasks[d] == -1 and ds.find(d) == d:
             tasks[d] = d
             tails[d] = tails[d] - 1 if tails[d] != 1 else n
+            ds.union(d, tails[d])
             xs[d] = chmap[ch]
         else:
-            parent = ds.find(tasks[d])
-            while (tl_parent := ds.find(tails[parent])) != parent:
-                ds.union(parent, tl_parent)
-                tails[parent] = tails[tl_parent]
+            parent = ds.find(d)
             tasks[tails[parent]] = d
             xs[tails[parent]] = chmap[ch]
+
             if tails[parent] == 1:
                 tails[parent] = n
             else:
                 tails[parent] -= 1
+
+            ds.union(tails[parent], parent)
+            tails[parent] = tails[tails[parent]]
 
     return "".join([chmap[x] for x in xs if x != -1])
