@@ -131,7 +131,7 @@ def merge(t1, t2):
 
 
 def insert(t, val, pos):
-    l, r = split_by_size(t, pos - 1)
+    l, r = split_by_size(t, pos)
     l = merge(l, Node(val, random.randint(0, 1000)))
     return merge(l, r)
 
@@ -152,9 +152,11 @@ def remove(t, k):
 
 
 def sum_treap(t, fr, to):
-    _, r = split_by_size(t, fr - 1)
-    rl, _ = split_by_size(r, to - fr + 1)
-    return rl.s
+    l, r = split_by_size(t, fr)
+    rl, rr = split_by_size(r, to - fr + 1)
+    result = rl.s
+    t = merge(l, merge(rl, rr))
+    return result
 
 
 def display(node):
@@ -173,19 +175,19 @@ def all(node, predicate):
     return all(node.left, predicate) and all(node.right, predicate)
 
 
-# d = {
-#     8: 10,
-#     12: 8,
-#     14: 14,
-#     15: 4,
-#     18: 9,
-#     23: 6,
-#     24: 15,
-#     25: 11,
-# }
-# root = build(d)
-# display(root)
-xs = [24, 5, 42, 13, 99, 2, 17]
+xs = [5, 24, 42, 13, 99, 2, 17]
 root = build_implicit_treap(xs)
-# print(sum_treap(root, 3, 6), sum(xs[3:7]))
-display(root)
+
+for i in range(len(xs)):
+    assert sum_treap(root, i, i) == xs[i]
+
+for i in range(len(xs)):
+    for j in range(i, len(xs)):
+        assert sum_treap(root, i, j) == sum(xs[i : j + 1])
+
+for _ in range(10):
+    xs = [random.randint(0, 100) for _ in range(100)]
+    root = build_implicit_treap(xs)
+    for i in range(len(xs)):
+        for j in range(i, len(xs)):
+            assert sum_treap(root, i, j) == sum(xs[i : j + 1])
