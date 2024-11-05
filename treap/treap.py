@@ -1,6 +1,9 @@
 import random
 
 
+priorities_set = set()
+
+
 class Node:
     def __init__(self, key, priority, left=None, right=None, parent=None):
         self.parent = parent
@@ -130,9 +133,17 @@ def merge(t1, t2):
         return t2
 
 
-def insert(t, val, pos):
-    l, r = split_by_size(t, pos)
-    l = merge(l, Node(val, random.randint(0, 1000)))
+def randomize():
+    p = random.randint(0, 1000)
+    while p in priorities_set:
+        p = random.randint(0, 1000)
+    priorities_set.add(p)
+    return p
+
+
+def insert(t, val, index):
+    l, r = split_by_size(t, index)
+    l = merge(l, Node(val, randomize()))
     return merge(l, r)
 
 
@@ -151,10 +162,24 @@ def remove(t, k):
         return merge(lt, rt)
 
 
+def erase(t, index):
+    l, r = split_by_size(t, index)
+    e, rr = split_by_size(r, 1)
+    result = e.k if e else None
+    t = merge(l, rr)
+    return result
+
+
+def erase_n(t, index, n):
+    l, r = split_by_size(t, index)
+    _, rr = split_by_size(r, n)
+    t = merge(l, rr)
+
+
 def sum_treap(t, fr, to):
     l, r = split_by_size(t, fr)
     rl, rr = split_by_size(r, to - fr + 1)
-    result = rl.s
+    result = rl.s if rl else None
     t = merge(l, merge(rl, rr))
     return result
 
