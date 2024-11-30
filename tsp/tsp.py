@@ -53,15 +53,10 @@ def tsp(graph):
                 for w in range(n):
                     if s & (1 << w) == 0 or w == v:
                         continue
-                    mincost = min(mincost, a[s & ~(1 << v)][w + 1] + graph[v][w])
+                    mincost = min(mincost, a[s & ~(1 << v)][w + 1] + graph[w][v])
                 a[s][v + 1] = mincost
 
     res = 10**6
     for v in range(1, n - 1):
         res = min(res, a[m - 1][v + 1] + graph[v][0])
     return res
-
-
-# graph = [[0, 1, 3, 2], [1, 0, 4, 6], [3, 4, 0, 5], [2, 6, 5, 0]]
-# graph = [[0, 10, 15, 20], [10, 0, 35, 25], [15, 35, 0, 30], [20, 25, 30, 0]]
-# print(tsp(graph))
