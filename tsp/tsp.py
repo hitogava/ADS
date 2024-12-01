@@ -27,18 +27,25 @@ def tsp_perms_naive(graph):
     return ans
 
 
+def gen_submasks(ans, mask, i, nbits, n):
+    if n < 0:
+        return ans
+    if nbits not in ans:
+        ans[nbits] = set()
+    ans[nbits].add(mask)
+    gen_submasks(ans, mask, i + 1, nbits, n - 1)
+    gen_submasks(ans, mask | (1 << i), i + 1, nbits + 1, n - 1)
+
+    return ans
+
+
 def tsp(graph):
     n = len(graph) + 1
     m = 2 ** (n - 1)
     a = [[10**6 for _ in range(n)] for _ in range(m)]
     a[1][1] = 0
 
-    sets = {i: [] for i in range(n)}
-    for p in product([0, 1], repeat=n - 1):
-        x = 0
-        for i in range(len(p)):
-            x += p[len(p) - i - 1] * 2**i
-        sets[p.count(1)].append(x)
+    sets = gen_submasks(dict(), 0, 0, 0, n - 1)
 
     for length, ss in sets.items():
         if length < 2:
