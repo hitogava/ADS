@@ -19,7 +19,7 @@ class perStack:
         return self.stack[t]
 
     def next_ver(self):
-        return len(self.stack)
+        return len(self.stack) - 1
 
     def push(self, t, value):
         if len(self.stack) <= t:
